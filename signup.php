@@ -1,5 +1,23 @@
 <?php
-include ' C:\xampp\htdocs\Viraj\partials\_dbconnect.php';
+$showAlert = false;
+$showError = false;
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+include 'partials\_dbconnect.php';
+$username = $_POST["username"];
+$password = $_POST["password"];
+$cpassword = $_POST["cpassword"];
+$exits = false;
+if(($password == $cpassword) && $exits==false){
+  $sql = "INSERT INTO `users` (`username`, `password`, `dt`) VALUES ('$username', '$password', current_timestamp())";
+  $result = mysqli_query($conn, $sql);
+  if($result){
+    $showAlert = true;
+  }
+}
+else{
+  $showError = "Password does not match";
+}
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -11,10 +29,26 @@ include ' C:\xampp\htdocs\Viraj\partials\_dbconnect.php';
   </head>
   <body>
   <?php require 'partials/_nav.php'?>
-  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+   <?php
+  if ($showAlert) {
+  echo'  <div class="alert alert-success alert-dismissible fade show" role="alert">
   <strong>Success!</strong> Your account is now created and you can login
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+  <span aria-hidden="true">&times;</span>
+  </button>
 </div>
+';
+}else($showError)  {
+  echo'  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>Error!</strong> '.$showError.'
+  <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+  <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+';
+}
+ 
+?>
     <div class="container">
         <h1 class="text-cneter">SignUp to your website</h1>
     </div>
@@ -32,7 +66,7 @@ include ' C:\xampp\htdocs\Viraj\partials\_dbconnect.php';
     <input type="password" class="form-control" id="exampleInputPassword1">
     <small id="emailHelp" class="form-text text-muted">Make sure to type the same password</small>
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary">SignUp</button>
 </form>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
